@@ -242,7 +242,7 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 st.title("🕵️ " + S.TITLE)
-pages = ["🏠 Room", "💬 Suspects", "⚖️ Solve the case"]
+pages = ["🏠 Scene", "💬 Suspects", "⚖️ Solve the case"]
 if st.query_params.get("admin") == "1":
     pages.append("🔐 Admin")
 page = st.sidebar.radio("Go to", pages)
