@@ -18,7 +18,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 load_dotenv()
 
 try:
-    for k in ("GROQ_API_KEY", "GROQ_MODEL"):
+    for k in ("GROQ_API_KEY", "GROQ_MODEL", "ADMIN_PASSWORD"):
         if k in st.secrets and not os.getenv(k):
             os.environ[k] = st.secrets[k]
 except Exception:
@@ -242,7 +242,10 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 st.title("🕵️ " + S.TITLE)
-page = st.sidebar.radio("Go to", ["🏠 Scene", "💬 Suspects", "⚖️ Solve the case"])
+pages = ["🏠 Room", "💬 Suspects", "⚖️ Solve the case"]
+if st.query_params.get("admin") == "1":
+    pages.append("🔐 Admin")
+page = st.sidebar.radio("Go to", pages)
 st.sidebar.button("🔄 Restart this case", on_click=restart_case)
 st.sidebar.button("🎲 New random case", on_click=random_case)
 
@@ -314,7 +317,7 @@ elif page == "💬 Suspects":
                 st.error(f"Something went wrong: {e}")
 
 # ======================= PAGE 3: SOLVE =======================
-else:
+elif page == "⚖️ Solve the case":
     if finished == "won":
         if st.session_state.just_won:
             st.balloons()
@@ -358,6 +361,25 @@ else:
         if st.session_state.last_feedback:
             correct, hint = st.session_state.last_feedback
             st.error(f"❌ {correct} of 3 parts correct. {hint}")
+
+# ======================= PAGE 4: ADMIN (hidden) =======================
+elif page == "🔐 Admin":
+    admin_pw = os.getenv("ADMIN_PASSWORD", "")
+    if not admin_pw:
+        st.warning("Set ADMIN_PASSWORD in your .env file (or in Secrets) to use this page.")
+    else:
+        typed_pw = st.text_input("Admin password", type="password")
+        if typed_pw == admin_pw:
+            st.success("Welcome, admin.")
+            for table in ("players", "found", "chat", "notes", "memories"):
+                rows = run(f"SELECT * FROM {table}")
+                cols = [c[1] for c in run(f"PRAGMA table_info({table})")]
+                st.subheader(f"{table} ({len(rows)} rows)")
+                st.dataframe([dict(zip(cols, r)) for r in rows], use_container_width=True)
+            with open(memory.DB, "rb") as f:
+                st.download_button("⬇️ Download game.db", f.read(), file_name="game.db")
+        elif typed_pw:
+            st.error("Wrong password.")
 
 # ======================= 📓 FLOATING NOTEBOOK =======================
 with st.container(key="notebook_fab"):
