@@ -5,8 +5,8 @@
 ---
 
 ## 🔗 Project Links
-* **Live Demo:** [Insert Streamlit Link Here]
-* **GitHub Repository:** [Insert GitHub Link Here]
+* **Live Demo:** https://miq-detective-game.streamlit.app/
+* **GitHub Repository:** https://github.com/miQ009/detective-game
 
 ---
 
@@ -54,10 +54,3 @@ The main design goal was keeping the AI reliable inside a game ecosystem: suspec
 ## ⚠️ Current Limitations
 * **Memory Retrieval:** Uses keyword-based memory retrieval rather than vector embeddings.
 * **API Constraints:** Subject to free-tier rate limits on the Groq API under heavy traffic.
-
----
-
-## 💡 Tips Before Sharing (Recruiter Checklist)
-- [ ] **Visuals:** Add 2 or 3 screenshots (the room page, a suspect chat screen, and the solved screen) directly to the top of your README. Recruiters often skim quickly!
-- [ ] **Links:** Replace the placeholders in the [Project Links](#-project-links) section with your actual live and GitHub links.
-- [ ] **Honest Limitations:** Keep the limitations section intact; it highlights your engineering maturity and system design awareness.
